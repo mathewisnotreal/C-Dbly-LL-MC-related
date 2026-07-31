@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="C Dbly LL MC related/C Dbly LL MC related.vcxproj" />
+</Solution>
