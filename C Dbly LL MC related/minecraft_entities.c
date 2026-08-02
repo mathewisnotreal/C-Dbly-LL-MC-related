@@ -17,10 +17,10 @@ struct Player* world_head = NULL;
 
 //Find player by name (helper)
 
-struct Player* findPlayerByName(char* name) {
+struct Player* findPlayerByName(char* name) { // helper func that helps search LL for a player name, if found, return the "Player" struct (node), else return NULL
 	struct Player* temp =  world_head;
-	while (temp != NULL) {
-		if (strcmp(temp->name, name) == 0) {
+	while (temp != NULL) { // means when temp has something in it, we want to keep iterating thru the LL until we find the desired name or reach of end of the LL 
+		if (strcmp(temp->name, name) == 0) { //strcmp is used to compare strings, returns 0 if equal
 			return temp;
 		}
 		temp = temp->next;
@@ -32,20 +32,26 @@ struct Player* findPlayerByName(char* name) {
 
 // Spawn Player (called when a player joins the world)
 
-void spawnPlayer(char* name, float x, float y, float z) {
+void spawnPlayer(char* name, float x, float y, float z) { // Search for the player in the linked list by name, if found, return, else create a new a new player and add it to the end of the LL
 	struct Player* newPlayer = (struct Player*)malloc(sizeof(struct Player));
+	// malloc() allocates memory for a new player,
+	// sizeof is your measuring tape for memory,
+	// telling the compiler how much memory to allocate for a datatype/variable,
+	// (in this case, the "Player" struct)
+	// We need sizeof to be accurate about how much memory to allocate for the new player,
+	// because the Player struct contains multiple data types (char array, floats, int, and pointers).
 
-	strcpy(newPlayer->name, name);
-	newPlayer->x = x;
+	strcpy(newPlayer->name, name); // strcpy copies the string from the previous name to the new player name
+	newPlayer->x = x;              // we copy the string name to the new name because want to store the new name
 	newPlayer->y = y;
 	newPlayer->z = z;
 	newPlayer->health = 100;
-	newPlayer->next = NULL;
-	newPlayer->prev = NULL;
+	newPlayer->next = NULL; // sets the value of the NEXT pointer to nothing (NULL) because we're adding a new player to the end of the list
+	newPlayer->prev = NULL; // sets the value of the PREV pointer to nothing (NULL) because we're adding a new player to the end of the list
 
 	// Insert at the end of the list
-	if (world_head == NULL) {
-		world_head = newPlayer;
+	if (world_head == NULL) { // basic check if the world_head is NULL so we don't run into a segmentation fault (segfault), 
+		world_head = newPlayer; // which is a way of saying "you tried to access memory that doesn't exist" (in this case, the world_head is NULL, so we can't access it)"
 		printf("> %s spawned in the world.\n", name);
 		return;
 	}
@@ -55,13 +61,13 @@ void spawnPlayer(char* name, float x, float y, float z) {
 	}
 	 temp->next = newPlayer;
 	 newPlayer->prev = temp;
-	 printf("Player spawned : % s at(% .1f, % .1f, % .1f)\n" , name, x, y, z);
+	 printf("Player spawned : %s at(%.1f, %.1f, %.1f)\n" , name, x, y, z);
 }
 
 // Despawn a player (called when a player dies or leaves)
 
-void despawnPlayer(char* name) {
-	struct Player* temp = world_head;
+void despawnPlayer(char* name) { // Search for the player by name in the linked list and remove them from the world
+	struct Player* temp = world_head; // 
 
 	while (temp != NULL && strcmp(temp->name, name) != 0) {
 		temp = temp->next;
@@ -108,7 +114,7 @@ void damagePlayer(char* name, int damage) {
 void movePlayer(char* name, float newX, float newY, float newZ) {
 	struct Player* temp = world_head;
 
-	while (temp != NULL && strcmp(temp->name, name) != 0) {
+	while (temp != NULL && strcmp(temp->name, name) != 0) { // string comparison to check if the player names match, if not, we move to the next player in the LL-> makes sure no duplicate names exist in the LL.
 		temp = temp->next;
 	}
 
@@ -117,23 +123,23 @@ void movePlayer(char* name, float newX, float newY, float newZ) {
 		return;
 	}
 
-	temp->x = newX;
-	temp->y = newY;
-	temp->z = newZ;
+	temp->x = newX; // This updates the player's world position to new coordinates (newX, newY, newZ) when they move in the world.
+	temp->y = newY; // This updates the player's world position to new coordinates (newX, newY, newZ) when they move in the world.
+	temp->z = newZ; // This updates the player's world position to new coordinates (newX, newY, newZ) when they move in the world.
 }
 
 // List All Players
 
 void listPlayers() {
-	struct Player* temp = world_head;
-	printf("\n--- Players in World ---\n");
-	if (temp == NULL) {
+	struct Player* temp = world_head; // This is a temp pointer used to iterate thru the LL of players,
+	printf("\n--- Players in World ---\n"); // starting from the head of the list (world_head) and moving to the next node until the end of the list. 
+	if (temp == NULL) {                     // This is important because we want to print all players in the world, starting from the VERY top of the list (world_head) 
 		printf("No players alive in the world.\n");
 	}
 	while (temp != NULL) {
 		printf("> %s | HP: %d | Pos: (%.1f, %.1f, %.1f)\n",        // continued below 
-			temp->name, temp->health, temp->x, temp->y, temp->z);
-		temp = temp->next;
+			temp->name, temp->health, temp->x, temp->y, temp->z); 
+		temp = temp->next; // moving the memory address over to the next node in the LL (temp->next) until all players have been printed out of the list (temp == NULL)
 	}
 	printf("End of List!\n");
 }
